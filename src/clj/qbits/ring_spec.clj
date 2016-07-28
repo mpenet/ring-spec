@@ -90,11 +90,11 @@
   (s/fspec
    :args (s/or :sync (s/cat :request :ring.spec/request)
                :async (s/cat :request :ring.spec/request
-                             :async-response
+                             :response-callback
                              (s/fspec
                               :args (s/cat :request :ring.spec/request)
                               :ret :ring.spec/response)
-                             :async-error
+                             :error-callback
                              (s/fspec
                               :args (s/cat :error
                                            (s/spec (x/instance-of Exception)
