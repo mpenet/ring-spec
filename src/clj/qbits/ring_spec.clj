@@ -97,7 +97,7 @@
                              :async-error
                              (s/fspec
                               :args (s/cat :error
-                                           (s/spec (x/instance-of java.lang.Throwable)
+                                           (s/spec (x/instance-of Exception)
                                                    :gen (fn [] (gen/fmap #(Exception. (str %))
                                                                          gen/string))))
                               :ret any?)))
@@ -105,8 +105,10 @@
 
 
 ;; FUN
-;; (prn ((ffirst (s/exercise ::ring.spec/handler) )
-;;       (ffirst (s/exercise ::ring.spec/request))))
+(binding [s/*fspec-iterations* 1]
+  (prn ((ffirst (s/exercise ::ring.spec/handler) )
+        (ffirst (s/exercise ::ring.spec/request)))))
+
 
 
 
