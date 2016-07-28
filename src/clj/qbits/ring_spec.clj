@@ -68,7 +68,7 @@
 
 ;; RESPONSE
 (x/ns-as 'ring.spec.response 'response)
-(s/def ::response/status (s/and int? #(s/int-in-range? 100 Long/MAX_VALUE %)))
+(s/def ::response/status (s/and pos-int? #(s/int-in-range? 100 599 %)))
 (s/def ::response/headers (s/map-of string?
                                     (s/or :value string?
                                           :values (s/coll-of string?))))
