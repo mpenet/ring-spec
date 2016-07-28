@@ -33,7 +33,7 @@
 (s/def ::request/scheme #{:https :http})
 (s/def ::request/request-method (s/or
                                  :method #{:get :post :put :delete :option
-                                             :patch :head :trace :connect}
+                                           :patch :head :trace :connect}
                                  :extension-method keyword?))
 
 (s/def ::request/protocol string?)
@@ -84,6 +84,7 @@
    :opt-un [::response/body]))
 
 ;; (s/exercise :ring.spec/request)
+;; (s/exercise :ring.spec/response)
 
 (s/def ::ring.spec/handler
   (s/fspec
