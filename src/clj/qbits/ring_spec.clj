@@ -103,7 +103,12 @@
                               :ret any?)))
    :ret :ring.spec/response))
 
-;; (prn (take 1 (s/exercise ::ring.spec/handler) ))
+
+;; FUN
+;; (prn ((ffirst (s/exercise ::ring.spec/handler) )
+;;       (ffirst (s/exercise ::ring.spec/request))))
+
+
 
 ;; (s/def ::ring.spec/middleware )
 ;; (s/def ::ring.spec/adapter)
