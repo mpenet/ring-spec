@@ -106,8 +106,8 @@
 
 ;; FUN
 (binding [s/*fspec-iterations* 1]
-  (prn ((ffirst (s/exercise ::ring.spec/handler) )
-        (ffirst (s/exercise ::ring.spec/request)))))
+  (prn ((first (g/sample (s/gen ::ring.spec/handler)) )
+        (first (g/sample (s/gen ::ring.spec/request))))))
 
 
 
