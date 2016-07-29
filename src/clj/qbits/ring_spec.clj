@@ -106,10 +106,9 @@
 (s/def ::handler/async
   (s/fspec
    :args (s/cat :request :ring.spec/request
-                :response-callback
-                ::handler/response-callback
-                :error-callback
-                ::handler/error-callback )))
+                :response-callback ::handler/response-callback
+                :error-callback ::handler/error-callback )
+   :ret any?))
 
 (s/def ::ring.spec/handler
   (s/or
@@ -120,8 +119,7 @@
    ;; for sending a response and a callback function for raising an exception. The
    ;; response callback takes a response map as its argument. The exception callback
    ;; takes an exception as its argument.
-   :async-handler ::handler/async
-   :ret any?))
+   :async-handler ::handler/async))
 
 ;; FUN
 ;; (binding [s/*fspec-iterations* 1
