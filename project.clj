@@ -6,7 +6,7 @@
   :dependencies [[org.clojure/clojure "1.9.0-alpha10"]
                  [org.clojure/test.check "0.9.0"]
                  [ring/ring-core "1.6.0-beta4"]
-                 [cc.qbits/spex "0.1.1"]]
+                 [cc.qbits/spex "0.1.2"]]
   :source-paths ["src/clj"]
   ;; :java-source-paths ["src/java"]
   ;; :javac-options ["-source" "1.6" "-target" "1.6" "-g"]
