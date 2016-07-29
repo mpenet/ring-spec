@@ -23,10 +23,9 @@
 (s/def ::request/server-port ::xn/port)
 (s/def ::request/server-name ::xn/hostname)
 (s/def ::request/remote-addr ::xn/ip)
-(s/def ::request/uri uri?)
+(s/def ::request/uri string?)
 (s/def ::request/headers (s/map-of string? string?))
 
-;; (prn ::request/headers)
 
 ;; opt
 (s/def ::request/query-string string?)
@@ -85,11 +84,16 @@
 
 (x/ns-as 'ring.spec.response.handler 'handler)
 
+;; A synchronous handler takes 1 argument, a request map, and returns a response
 (s/def ::handler/sync
   (s/fspec
-    :args (s/cat :request :ring.spec/request)
-    :ret :ring.spec/response))
+   :args (s/cat :request :ring.spec/request)
+   :ret :ring.spec/response))
 
+;; An asynchronous handler takes 3 arguments: a request map, a callback function
+;; for sending a response and a callback function for raising an exception. The
+;; response callback takes a response map as its argument. The exception callback
+;; takes an exception as its argument.
 (s/def ::handler/response-callback
   (s/fspec
    :args (s/cat :request :ring.spec/request)
@@ -112,22 +116,19 @@
 
 (s/def ::ring.spec/handler
   (s/or
-   ;; A synchronous handler takes 1 argument, a request map, and returns a response
    :sync-handler ::handler/sync
-
-   ;; An asynchronous handler takes 3 arguments: a request map, a callback function
-   ;; for sending a response and a callback function for raising an exception. The
-   ;; response callback takes a response map as its argument. The exception callback
-   ;; takes an exception as its argument.
    :async-handler ::handler/async))
 
 ;; FUN
 ;; (binding [s/*fspec-iterations* 1
 ;;           s/*recursion-limit* 1]
 ;;   (prn "---------------------------------------------")
-;;   (prn (first (g/sample (s/gen ::ring.spec/handler))))
-;;   ;; (prn ((first (g/sample (s/gen ::ring.spec/handler)))
-;;   ;;       (first (g/sample (s/gen ::ring.spec/request)))))
+;;   ;; (prn (first (g/sample (s/gen ::ring.spec/handler))))
+;;   (prn ((first (g/sample (s/gen ::ring.spec/handler))
+;;                ;; (first (g/sample (s/gen ::ring.spec/request)))
+;;                ) {:server-port 100 :server-name "asdfadf" :uri "http;//asdfaf/"
+;;                   :headers {}
+;;                   :remote-addr "111.111.111.111"}))
 ;;   )
 
 
