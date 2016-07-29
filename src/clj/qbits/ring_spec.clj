@@ -83,36 +83,54 @@
    :req-un [::response/status ::response/headers]
    :opt-un [::response/body]))
 
+(x/ns-as 'ring.spec.response.handler 'handler)
+
+(s/def ::handler/sync
+  (s/fspec
+    :args (s/cat :request :ring.spec/request)
+    :ret :ring.spec/response))
+
+(s/def ::handler/response-callback
+  (s/fspec
+   :args (s/cat :request :ring.spec/request)
+   :ret any?))
+
+(s/def ::handler/error-callback
+  (s/fspec
+   :args (s/cat :error
+                (s/spec (x/instance-of Exception)
+                        :gen (fn [] (gen/fmap #(Exception. (str %))
+                                              gen/string))))
+   :ret any?))
+
+(s/def ::handler/async
+  (s/fspec
+   :args (s/cat :request :ring.spec/request
+                :response-callback
+                ::handler/response-callback
+                :error-callback
+                ::handler/error-callback )))
+
 (s/def ::ring.spec/handler
   (s/or
    ;; A synchronous handler takes 1 argument, a request map, and returns a response
-   :sync-handler
-   (s/fspec
-    :args (s/cat :request :ring.spec/request)
-    :ret :ring.spec/response)
+   :sync-handler ::handler/sync
+
    ;; An asynchronous handler takes 3 arguments: a request map, a callback function
    ;; for sending a response and a callback function for raising an exception. The
    ;; response callback takes a response map as its argument. The exception callback
    ;; takes an exception as its argument.
-   :async-handler
-   (s/fspec
-    :args (s/cat :request :ring.spec/request
-                 :response-callback
-                 (s/fspec
-                  :args (s/cat :request :ring.spec/request))
-                 :error-callback
-                 (s/fspec
-                  :args (s/cat :error
-                               (s/spec (x/instance-of Exception)
-                                       :gen (fn [] (gen/fmap #(Exception. (str %))
-                                                             gen/string)))))))))
-
+   :async-handler ::handler/async
+   :ret any?))
 
 ;; FUN
-(binding [s/*fspec-iterations* 3]
-  (prn "---------------------------------------------")
-  (prn ((first (g/sample (s/gen ::ring.spec/handler)))
-        (first (g/sample (s/gen ::ring.spec/request))))))
+;; (binding [s/*fspec-iterations* 1
+;;           s/*recursion-limit* 1]
+;;   (prn "---------------------------------------------")
+;;   (prn (first (g/sample (s/gen ::ring.spec/handler))))
+;;   ;; (prn ((first (g/sample (s/gen ::ring.spec/handler)))
+;;   ;;       (first (g/sample (s/gen ::ring.spec/request)))))
+;;   )
 
 
 
